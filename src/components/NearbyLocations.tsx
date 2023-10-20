@@ -33,6 +33,7 @@ const NearbyLocations = ({
           <div className="flex gap-2 mt-2 w-full flex-wrap">
             {destinations.map((destination) => (
               <button
+                key={destination.id}
                 onClick={() => {
                   handleOnClick(destination.id);
                 }}

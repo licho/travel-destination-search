@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 import Loading from "./Loading";
 
 export type Option = {
@@ -24,6 +25,12 @@ const SearchBox = ({
   const [inputValue, setInputValue] = useState<string>("");
   const [isOpen, setIsOpen] = useState(false);
   const [cursor, setCursor] = useState(0);
+  const debouncedOnChange = useDebouncedCallback((value) => {
+    onChange && onChange(value);
+  }, 500);
+  const debouncedClose = useDebouncedCallback(() => {
+    setIsOpen(false);
+  }, 500);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -35,7 +42,7 @@ const SearchBox = ({
       return;
     }
 
-    onChange && onChange(value);
+    debouncedOnChange(value);
     setIsOpen(true);
   };
 
@@ -45,9 +52,14 @@ const SearchBox = ({
     onSelect && onSelect(option);
   };
 
+  const handleOnBlur = () => {
+    debouncedClose();
+  };
+
   const handleKeyDown = (event: React.KeyboardEvent) => {
     switch (event.key) {
       case "ArrowUp":
+        event.preventDefault(); // Prevents the cursor to move
         cursor > 0 && setCursor((prev) => prev - 1);
         break;
       case "ArrowDown":
@@ -73,6 +85,7 @@ const SearchBox = ({
         value={inputValue}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
+        onBlur={handleOnBlur}
       />
 
       {error && (
@@ -80,8 +93,9 @@ const SearchBox = ({
           Something went wrong! Please, try again.
         </div>
       )}
+
       {isOpen && !error && (
-        <ul className="absolute z-10 top-20 mt-5 w-80 bg-gray-400 border-black py-2 px-4 rounded-lg text-left text-gray-700">
+        <ul className="absolute z-10 top-20 mt-5 w-80 bg-gray-400 border-black py-2 px-4 rounded-lg text-left text-gray-700 overflow-y-auto">
           {!loading &&
             options.map((option, key) => (
               <li

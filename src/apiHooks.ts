@@ -13,6 +13,9 @@ export function useDestinationSearch(initialSearchTerm: Destination["name"]) {
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    if (!searchTerm) {
+      return;
+    }
     setLoading(true);
 
     searchDestinationsByName(searchTerm)

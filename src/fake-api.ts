@@ -22,11 +22,11 @@ export async function searchDestinationsByName(
       });
 
       resolve(results);
-    }, 1000); // Simulating a 1-second delay as if it were an HTTP call
+    }, 1000);
   });
 }
 
-// Simulated API function to retrieve destination by ID (async)
+// Simulated API function to retrieve destination by ID
 export async function getDestinationById(destinationId: Destination["id"]) {
   console.log(`getDestinationById call | destinationId: ${destinationId}`);
 
@@ -41,11 +41,11 @@ export async function getDestinationById(destinationId: Destination["id"]) {
       } else {
         reject("HTTP 404 Destination not found");
       }
-    }, 1000); // Simulating a 1-second delay as if it were an HTTP call
+    }, 1000);
   });
 }
 
-// Simulated API function to retrieve nearby destinations by coordinates (async)
+// Simulated API function to retrieve nearby destinations by coordinates
 export async function getNearbyDestinations(destinationId: Destination["id"]) {
   console.log(`getNearbyDestinations call | destinationId: ${destinationId}`);
 
@@ -58,6 +58,7 @@ export async function getNearbyDestinations(destinationId: Destination["id"]) {
       reject("Source destination not found");
       return;
     }
+
     setTimeout(() => {
       const sortedDestinations = destinations
         .filter((destination) => destination.id !== destinationId)
@@ -74,6 +75,6 @@ export async function getNearbyDestinations(destinationId: Destination["id"]) {
         .slice(0, 4); // Get the 4 closest destinations
 
       resolve(sortedDestinations);
-    }, 2000); // Simulating a 1-second delay as if it were an HTTP call
+    }, 2000);
   });
 }
